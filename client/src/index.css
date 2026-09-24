@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-stone-50 text-stone-800 font-sans antialiased; }
+  h1, h2, h3, h4 { @apply font-display; }
+}
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-semibold transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none; }
+  .btn-primary { @apply btn bg-brand-600 text-white hover:bg-brand-700 shadow-sm; }
+  .btn-secondary { @apply btn bg-white text-brand-700 border border-brand-200 hover:bg-brand-50; }
+  .btn-outline { @apply btn border border-stone-300 text-stone-700 hover:bg-stone-100; }
+  .input { @apply w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100; }
+  .label { @apply mb-1.5 block text-sm font-medium text-stone-700; }
+  .card { @apply rounded-2xl bg-white shadow-card; }
+  .badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold; }
+  .container-x { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
+}
+
+/* Thin, brand-tinted scrollbar for horizontally-scrolling rails */
+.scrollbar-thin::-webkit-scrollbar { height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: theme('colors.brand.200'); border-radius: 9999px; }
