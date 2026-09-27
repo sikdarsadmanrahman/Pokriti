@@ -2,6 +2,7 @@ import 'dotenv/config'; // must stay the first import so env vars exist for ever
 import mongoose from 'mongoose';
 import app from './app.js';
 import { connectDB } from './config/db.js';
+import { ensureSeedAdmin } from './bootstrap/ensureAdmin.js';
 
 const missing = ['MONGODB_URI', 'JWT_SECRET'].filter((k) => !process.env[k]);
 if (missing.length) {
@@ -14,6 +15,7 @@ if (process.env.NODE_ENV === 'production' && process.env.JWT_SECRET.length < 32)
 }
 
 await connectDB(process.env.MONGODB_URI);
+await ensureSeedAdmin();
 
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => console.log(`API listening on :${PORT} (${process.env.NODE_ENV || 'development'})`));

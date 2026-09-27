@@ -1,9 +1,18 @@
 import mongoose from 'mongoose';
 
+let cached = globalThis.__mongooseConn;
+if (!cached) cached = globalThis.__mongooseConn = { conn: null, promise: null };
+
+/** Safe to call multiple times (e.g. once per request in a serverless environment) — reuses the existing connection. */
 export async function connectDB(uri) {
+  if (cached.conn) return cached.conn;
   mongoose.set('strictQuery', true);
-  // Indexes are declared on the schemas and built on startup (autoIndex).
-  // On a very large production collection, set autoIndex=false and run Model.syncIndexes() in a deploy step.
-  await mongoose.connect(uri, { maxPoolSize: 20, serverSelectionTimeoutMS: 10000 });
-  console.log(`MongoDB connected: ${mongoose.connection.host}/${mongoose.connection.name}`);
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(uri, { maxPoolSize: 20, serverSelectionTimeoutMS: 10000 }).then((m) => {
+      console.log(`MongoDB connected: ${m.connection.host}/${m.connection.name}`);
+      return m;
+    });
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
